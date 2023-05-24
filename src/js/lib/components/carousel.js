@@ -23,11 +23,25 @@ $.prototype.carousel = function() {
         let offset = 0, slideIndex = 0;
 
         if (carousel.dataset.autoSlide === 'true') {
-            setInterval(() => {
-                offset = (offset == (widthNum * (slides.length - 1))) ? 0 : offset + widthNum;
-                slideIndex = (slideIndex == slides.length - 1) ? 0 : slideIndex + 1;
-                slideTransition(offset, slideIndex);
-            }, 2000)
+            let autoCarousel;
+
+            const _startCarousel = (time) => {
+                autoCarousel = setInterval(() => {
+                    offset = (offset == (widthNum * (slides.length - 1))) ? 0 : offset + widthNum;
+                    slideIndex = (slideIndex == slides.length - 1) ? 0 : slideIndex + 1;
+                    slideTransition(offset, slideIndex);
+                }, time)
+            }
+            _startCarousel(2000);
+
+            $(carousel).on('mouseover', () => {
+                clearInterval(autoCarousel);
+            })
+
+            $(carousel).on('mouseout', () => {
+                _startCarousel(2000);
+            })
+            
         }
 
         $(carousel.querySelector('[data-slide="next"]')).click((e) => {
